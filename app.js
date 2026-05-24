@@ -844,7 +844,7 @@ function renderCharts(totalEstimado, totalMateriales, totalGastos) {
     options: {
       plugins: { legend: { display:false } },
       scales: {
-        y: { ticks: { font:{family:'IBM Plex Mono',size:9}, callback: v => '$'+fmtK(v) }, grid: { color:'#e4e7ec' } },
+        y: { ticks: { font:{family:'IBM Plex Mono',size:9}, callback: v => 'S/'+fmtK(v) }, grid: { color:'#e4e7ec' } },
         x: { ticks: { font:{family:'IBM Plex Mono',size:9} }, grid: { display:false } }
       }
     }
@@ -1150,8 +1150,8 @@ function toggleSidebar() {
    FORMATTING HELPERS
 ═══════════════════════════════════════════════════════ */
 function fmtMoney(n) {
-  if (isNaN(n)) return '$0.00';
-  return '$' + Number(n).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  if (isNaN(n)) return 'S/ 0.00';
+  return 'S/' + Number(n).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
 }
 
 function fmtNum(n) {
