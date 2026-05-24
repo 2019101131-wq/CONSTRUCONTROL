@@ -62,7 +62,7 @@ async function fetchDB() {
   setStatus('syncing', 'Cargando...');
   showLoading('Cargando datos de la obra...');
   try {
-    const res = await fetch(`${JSONBIN_BASE}/S/.{CFG.binId}/latest`, {
+    const res = await fetch(`${JSONBIN_BASE}/${CFG.binId}/latest`, {
       headers: { 'X-Master-Key': CFG.apiKey }
     });
     if (!res.ok) throw new Error(`HTTP S/.{res.status}`);
