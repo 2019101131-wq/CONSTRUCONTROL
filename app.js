@@ -62,10 +62,10 @@ async function fetchDB() {
   setStatus('syncing', 'Cargando...');
   showLoading('Cargando datos de la obra...');
   try {
-    const res = await fetch(`${JSONBIN_BASE}/${CFG.binId}/latest`, {
+    const res = await fetch(`S/.{JSONBIN_BASE}/S/.{CFG.binId}/latest`, {
       headers: { 'X-Master-Key': CFG.apiKey }
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP S/.{res.status}`);
     const json = await res.json();
     const record = json.record || {};
     DB.cronograma  = Array.isArray(record.cronograma)  ? record.cronograma  : [];
@@ -102,7 +102,7 @@ async function pushDB() {
       nombreObra:  CFG.nombreObra,
       lastUpdate:  new Date().toISOString()
     };
-    const res = await fetch(`${JSONBIN_BASE}/${CFG.binId}`, {
+    const res = await fetch(`S/.{JSONBIN_BASE}/S/.{CFG.binId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ async function pushDB() {
       },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) throw new Error(`HTTP S/.{res.status}`);
     setStatus('online', CFG.nombreObra || 'Conectado');
     setSyncIndicator('active');
   } catch(err) {
@@ -204,15 +204,15 @@ function renderCronograma(filter = '') {
 
   tbody.innerHTML = rows.map((r, i) => `
     <tr>
-      <td class="row-num">${i+1}</td>
-      <td>${r.etapa}</td>
-      <td class="num">${fmtDate(r.fecha)}</td>
-      <td class="num">${fmtMoney(r.monto)}</td>
-      <td>${badgeEstado(r.estado)}</td>
-      <td>${r.obs || '—'}</td>
+      <td class="row-num">S/.{i+1}</td>
+      <td>S/.{r.etapa}</td>
+      <td class="num">S/.{fmtDate(r.fecha)}</td>
+      <td class="num">S/.{fmtMoney(r.monto)}</td>
+      <td>S/.{badgeEstado(r.estado)}</td>
+      <td>S/.{r.obs || '—'}</td>
       <td>
-        <button class="tbl-btn tbl-btn-edit" onclick="editCronograma('${r.id}')">EDITAR</button>
-        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('cronograma','${r.id}')">ELIMINAR</button>
+        <button class="tbl-btn tbl-btn-edit" onclick="editCronograma('S/.{r.id}')">EDITAR</button>
+        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('cronograma','S/.{r.id}')">ELIMINAR</button>
       </td>
     </tr>`).join('');
 
@@ -224,10 +224,10 @@ function renderCronogramaSummary() {
   const pagado    = DB.cronograma.filter(r => r.estado === 'PAGADO').reduce((s,r) => s + r.monto, 0);
   const pendiente = total - pagado;
   document.getElementById('cronogramaSummary').innerHTML = `
-    <div class="sum-chip"><span class="sum-chip-label">Total Programado</span><span class="sum-chip-val">${fmtMoney(total)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Total Pagado</span><span class="sum-chip-val positive">${fmtMoney(pagado)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Pendiente</span><span class="sum-chip-val ${pendiente>0?'negative':''}">${fmtMoney(pendiente)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">N° Pagos</span><span class="sum-chip-val">${DB.cronograma.length}</span></div>`;
+    <div class="sum-chip"><span class="sum-chip-label">Total Programado</span><span class="sum-chip-val">S/.{fmtMoney(total)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Total Pagado</span><span class="sum-chip-val positive">S/.{fmtMoney(pagado)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Pendiente</span><span class="sum-chip-val S/.{pendiente>0?'negative':''}">S/.{fmtMoney(pendiente)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">N° Pagos</span><span class="sum-chip-val">S/.{DB.cronograma.length}</span></div>`;
 }
 
 function editCronograma(id) {
@@ -297,16 +297,16 @@ function renderGastos(filter = '') {
 
   tbody.innerHTML = rows.map((r, i) => `
     <tr>
-      <td class="row-num">${i+1}</td>
-      <td class="num">${fmtDate(r.fecha)}</td>
-      <td>${r.desc}</td>
-      <td class="num">${fmtMoney(r.costo)}</td>
-      <td class="num">${r.fechaPago ? fmtDate(r.fechaPago) : '—'}</td>
-      <td class="num">${fmtMoney(r.pagado)}</td>
-      <td class="num ${r.pendiente>0?'over-cost':'under-cost'}">${fmtMoney(r.pendiente)}</td>
+      <td class="row-num">S/.{i+1}</td>
+      <td class="num">S/.{fmtDate(r.fecha)}</td>
+      <td>S/.{r.desc}</td>
+      <td class="num">S/.{fmtMoney(r.costo)}</td>
+      <td class="num">S/.{r.fechaPago ? fmtDate(r.fechaPago) : '—'}</td>
+      <td class="num">S/.{fmtMoney(r.pagado)}</td>
+      <td class="num S/.{r.pendiente>0?'over-cost':'under-cost'}">S/.{fmtMoney(r.pendiente)}</td>
       <td>
-        <button class="tbl-btn tbl-btn-edit" onclick="editGasto('${r.id}')">EDITAR</button>
-        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('gastos','${r.id}')">ELIMINAR</button>
+        <button class="tbl-btn tbl-btn-edit" onclick="editGasto('S/.{r.id}')">EDITAR</button>
+        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('gastos','S/.{r.id}')">ELIMINAR</button>
       </td>
     </tr>`).join('');
 
@@ -318,10 +318,10 @@ function renderGastosSummary() {
   const pagado   = DB.gastos.reduce((s,r) => s + (r.pagado||0), 0);
   const pendiente = total - pagado;
   document.getElementById('gastosSummary').innerHTML = `
-    <div class="sum-chip"><span class="sum-chip-label">Total Gastos</span><span class="sum-chip-val">${fmtMoney(total)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Pagado</span><span class="sum-chip-val positive">${fmtMoney(pagado)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Pendiente</span><span class="sum-chip-val ${pendiente>0?'negative':''}">${fmtMoney(pendiente)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">N° Gastos</span><span class="sum-chip-val">${DB.gastos.length}</span></div>`;
+    <div class="sum-chip"><span class="sum-chip-label">Total Gastos</span><span class="sum-chip-val">S/.{fmtMoney(total)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Pagado</span><span class="sum-chip-val positive">S/.{fmtMoney(pagado)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Pendiente</span><span class="sum-chip-val S/.{pendiente>0?'negative':''}">S/.{fmtMoney(pendiente)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">N° Gastos</span><span class="sum-chip-val">S/.{DB.gastos.length}</span></div>`;
 }
 
 function editGasto(id) {
@@ -407,19 +407,19 @@ function renderDespacho(filter = '') {
 
   tbody.innerHTML = rows.map((r, i) => `
     <tr>
-      <td class="row-num">${i+1}</td>
-      <td class="num">${fmtDate(r.fecha)}</td>
-      <td><span style="font-family:var(--mono);font-size:11px">${r.guia}</span></td>
-      <td><strong>${r.material}</strong></td>
-      <td>${r.unidad}</td>
-      <td class="num">${fmtNum(r.cantidad)}</td>
-      <td class="num">${fmtMoney(r.cunit)}</td>
-      <td class="num"><strong>${fmtMoney(r.ctotal)}</strong></td>
-      <td>${r.resp || '—'}</td>
-      <td>${r.obs || '—'}</td>
+      <td class="row-num">S/.{i+1}</td>
+      <td class="num">S/.{fmtDate(r.fecha)}</td>
+      <td><span style="font-family:var(--mono);font-size:11px">S/.{r.guia}</span></td>
+      <td><strong>S/.{r.material}</strong></td>
+      <td>S/.{r.unidad}</td>
+      <td class="num">S/.{fmtNum(r.cantidad)}</td>
+      <td class="num">S/.{fmtMoney(r.cunit)}</td>
+      <td class="num"><strong>S/.{fmtMoney(r.ctotal)}</strong></td>
+      <td>S/.{r.resp || '—'}</td>
+      <td>S/.{r.obs || '—'}</td>
       <td>
-        <button class="tbl-btn tbl-btn-edit" onclick="editDespacho('${r.id}')">EDITAR</button>
-        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('despacho','${r.id}')">ELIMINAR</button>
+        <button class="tbl-btn tbl-btn-edit" onclick="editDespacho('S/.{r.id}')">EDITAR</button>
+        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('despacho','S/.{r.id}')">ELIMINAR</button>
       </td>
     </tr>`).join('');
 
@@ -431,10 +431,10 @@ function renderDespachoSummary() {
   const guias    = new Set(DB.despacho.map(r => r.guia)).size;
   const materiales = new Set(DB.despacho.map(r => r.material.toLowerCase())).size;
   document.getElementById('despachoSummary').innerHTML = `
-    <div class="sum-chip"><span class="sum-chip-label">Costo Total</span><span class="sum-chip-val">${fmtMoney(total)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">N° Despachos</span><span class="sum-chip-val">${DB.despacho.length}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">N° Guías</span><span class="sum-chip-val">${guias}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Materiales Distintos</span><span class="sum-chip-val">${materiales}</span></div>`;
+    <div class="sum-chip"><span class="sum-chip-label">Costo Total</span><span class="sum-chip-val">S/.{fmtMoney(total)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">N° Despachos</span><span class="sum-chip-val">S/.{DB.despacho.length}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">N° Guías</span><span class="sum-chip-val">S/.{guias}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Materiales Distintos</span><span class="sum-chip-val">S/.{materiales}</span></div>`;
 }
 
 function editDespacho(id) {
@@ -484,13 +484,13 @@ function renderBalance() {
   tbody.innerHTML = rows.map((r, i) => {
     const cunitProm = r.costo / r.cantidad;
     return `<tr>
-      <td class="row-num">${i+1}</td>
-      <td><strong>${r.material}</strong></td>
-      <td>${r.unidad}</td>
-      <td class="num">${fmtNum(r.cantidad)}</td>
-      <td class="num">${fmtMoney(cunitProm)}</td>
-      <td class="num"><strong>${fmtMoney(r.costo)}</strong></td>
-      <td class="num">${r.count}</td>
+      <td class="row-num">S/.{i+1}</td>
+      <td><strong>S/.{r.material}</strong></td>
+      <td>S/.{r.unidad}</td>
+      <td class="num">S/.{fmtNum(r.cantidad)}</td>
+      <td class="num">S/.{fmtMoney(cunitProm)}</td>
+      <td class="num"><strong>S/.{fmtMoney(r.costo)}</strong></td>
+      <td class="num">S/.{r.count}</td>
     </tr>`;
   }).join('');
 }
@@ -559,18 +559,18 @@ function renderPresupuesto(filter = '') {
 
   tbody.innerHTML = rows.map((r, i) => `
     <tr>
-      <td class="row-num">${i+1}</td>
-      <td><span class="badge badge-blue">${r.piso}</span></td>
-      <td>${r.etapa}</td>
-      <td>${r.categoria}</td>
-      <td><strong>${r.material}</strong></td>
-      <td>${r.unidad}</td>
-      <td class="num">${fmtNum(r.cantidad)}</td>
-      <td class="num">${fmtMoney(r.cunit)}</td>
-      <td class="num"><strong>${fmtMoney(r.valor)}</strong></td>
+      <td class="row-num">S/.{i+1}</td>
+      <td><span class="badge badge-blue">S/.{r.piso}</span></td>
+      <td>S/.{r.etapa}</td>
+      <td>S/.{r.categoria}</td>
+      <td><strong>S/.{r.material}</strong></td>
+      <td>S/.{r.unidad}</td>
+      <td class="num">S/.{fmtNum(r.cantidad)}</td>
+      <td class="num">S/.{fmtMoney(r.cunit)}</td>
+      <td class="num"><strong>S/.{fmtMoney(r.valor)}</strong></td>
       <td>
-        <button class="tbl-btn tbl-btn-edit" onclick="editPresupuesto('${r.id}')">EDITAR</button>
-        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('presupuesto','${r.id}')">ELIMINAR</button>
+        <button class="tbl-btn tbl-btn-edit" onclick="editPresupuesto('S/.{r.id}')">EDITAR</button>
+        <button class="tbl-btn tbl-btn-del"  onclick="confirmDelete('presupuesto','S/.{r.id}')">ELIMINAR</button>
       </td>
     </tr>`).join('');
 
@@ -582,10 +582,10 @@ function renderPresupuestoSummary() {
   const pisos    = new Set(DB.presupuesto.map(r => r.piso)).size;
   const etapas   = new Set(DB.presupuesto.map(r => r.etapa)).size;
   document.getElementById('presupuestoSummary').innerHTML = `
-    <div class="sum-chip"><span class="sum-chip-label">Valor Total STD</span><span class="sum-chip-val">${fmtMoney(total)}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">N° Ítems</span><span class="sum-chip-val">${DB.presupuesto.length}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Pisos</span><span class="sum-chip-val">${pisos}</span></div>
-    <div class="sum-chip"><span class="sum-chip-label">Etapas</span><span class="sum-chip-val">${etapas}</span></div>`;
+    <div class="sum-chip"><span class="sum-chip-label">Valor Total STD</span><span class="sum-chip-val">S/.{fmtMoney(total)}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">N° Ítems</span><span class="sum-chip-val">S/.{DB.presupuesto.length}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Pisos</span><span class="sum-chip-val">S/.{pisos}</span></div>
+    <div class="sum-chip"><span class="sum-chip-label">Etapas</span><span class="sum-chip-val">S/.{etapas}</span></div>`;
 }
 
 function updatePisoFilter() {
@@ -593,7 +593,7 @@ function updatePisoFilter() {
   if (!sel) return;
   const pisos = [...new Set(DB.presupuesto.map(r => r.piso))].sort();
   const current = sel.value;
-  sel.innerHTML = `<option value="">Todos los pisos</option>` + pisos.map(p => `<option value="${p}">${p}</option>`).join('');
+  sel.innerHTML = `<option value="">Todos los pisos</option>` + pisos.map(p => `<option value="S/.{p}">S/.{p}</option>`).join('');
   sel.value = current;
 }
 
@@ -651,16 +651,16 @@ function renderDesviaciones() {
   tbody.innerHTML = rows.map(r => {
     const estado = desvEstado(r.pctDesv);
     return `<tr>
-      <td><strong>${r.material}</strong></td>
-      <td>${r.unidad}</td>
-      <td class="num">${fmtNum(r.cantStd)}</td>
-      <td class="num">${fmtNum(r.cantReal)}</td>
-      <td class="num ${r.desvCant>0?'over-cost':r.desvCant<0?'under-cost':''}">${fmtNum(r.desvCant)}</td>
-      <td class="num ${r.pctDesv>0?'over-cost':r.pctDesv<0?'under-cost':''}">${r.pctDesv.toFixed(1)}%</td>
-      <td class="num">${fmtMoney(r.valorStd)}</td>
-      <td class="num">${fmtMoney(r.valorReal)}</td>
-      <td class="num ${r.desvEcon>0?'over-cost':r.desvEcon<0?'under-cost':''}">${fmtMoney(r.desvEcon)}</td>
-      <td>${estado}</td>
+      <td><strong>S/.{r.material}</strong></td>
+      <td>S/.{r.unidad}</td>
+      <td class="num">S/.{fmtNum(r.cantStd)}</td>
+      <td class="num">S/.{fmtNum(r.cantReal)}</td>
+      <td class="num S/.{r.desvCant>0?'over-cost':r.desvCant<0?'under-cost':''}">S/.{fmtNum(r.desvCant)}</td>
+      <td class="num S/.{r.pctDesv>0?'over-cost':r.pctDesv<0?'under-cost':''}">S/.{r.pctDesv.toFixed(1)}%</td>
+      <td class="num">S/.{fmtMoney(r.valorStd)}</td>
+      <td class="num">S/.{fmtMoney(r.valorReal)}</td>
+      <td class="num S/.{r.desvEcon>0?'over-cost':r.desvEcon<0?'under-cost':''}">S/.{fmtMoney(r.desvEcon)}</td>
+      <td>S/.{estado}</td>
     </tr>`;
   }).join('');
 }
@@ -697,15 +697,15 @@ function renderEstandar() {
   document.getElementById('estandarSummary').innerHTML = `
     <div class="est-card over">
       <div class="est-card-label">MATERIALES CON SOBRECONSUMO</div>
-      <div class="est-card-val">${sobre}</div>
+      <div class="est-card-val">S/.{sobre}</div>
     </div>
     <div class="est-card under">
       <div class="est-card-label">MATERIALES CON SUBCONSUMO</div>
-      <div class="est-card-val">${bajo}</div>
+      <div class="est-card-val">S/.{bajo}</div>
     </div>
-    <div class="est-card ${sobreEcon>0?'over':'ok'}">
+    <div class="est-card S/.{sobreEcon>0?'over':'ok'}">
       <div class="est-card-label">IMPACTO ECONÓMICO TOTAL</div>
-      <div class="est-card-val">${fmtMoney(sobreEcon - bajoEcon)}</div>
+      <div class="est-card-val">S/.{fmtMoney(sobreEcon - bajoEcon)}</div>
     </div>`;
 
   if (!rows.length) {
@@ -717,14 +717,14 @@ function renderEstandar() {
 
   tbody.innerHTML = rows.map(r => `
     <tr>
-      <td><strong>${r.material}</strong></td>
-      <td>${tipoBadge(r.tipo)}</td>
-      <td class="num">${fmtNum(r.cantStd)}</td>
-      <td class="num">${fmtNum(r.cantReal)}</td>
-      <td class="num ${r.diff>0?'over-cost':r.diff<0?'under-cost':''}">${fmtNum(r.diff)}</td>
-      <td class="num ${r.diffEcon>0?'over-cost':r.diffEcon<0?'under-cost':''}">${fmtMoney(r.diffEcon)}</td>
-      <td class="num">${r.pct.toFixed(1)}%</td>
-      <td>${r.efic}</td>
+      <td><strong>S/.{r.material}</strong></td>
+      <td>S/.{tipoBadge(r.tipo)}</td>
+      <td class="num">S/.{fmtNum(r.cantStd)}</td>
+      <td class="num">S/.{fmtNum(r.cantReal)}</td>
+      <td class="num S/.{r.diff>0?'over-cost':r.diff<0?'under-cost':''}">S/.{fmtNum(r.diff)}</td>
+      <td class="num S/.{r.diffEcon>0?'over-cost':r.diffEcon<0?'under-cost':''}">S/.{fmtMoney(r.diffEcon)}</td>
+      <td class="num">S/.{r.pct.toFixed(1)}%</td>
+      <td>S/.{r.efic}</td>
     </tr>`).join('');
 }
 
@@ -775,12 +775,12 @@ function renderAlerts(pendiente, desviacion, totalEstimado) {
     alerts.push({ type:'error', msg:'⚠ Base de datos no configurada. Haz clic en "CONFIGURAR BD" para comenzar.' });
   }
   if (pendiente > 0) {
-    alerts.push({ type:'warn', msg:`💳 Hay ${fmtMoney(pendiente)} pendientes de pago en cronograma y gastos.` });
+    alerts.push({ type:'warn', msg:`💳 Hay S/.{fmtMoney(pendiente)} pendientes de pago en cronograma y gastos.` });
   }
   if (totalEstimado > 0 && desviacion / totalEstimado > 0.1) {
-    alerts.push({ type:'error', msg:`🔴 Sobrecoste del ${(desviacion/totalEstimado*100).toFixed(1)}% vs presupuesto (${fmtMoney(desviacion)}).` });
+    alerts.push({ type:'error', msg:`🔴 Sobrecoste del S/.{(desviacion/totalEstimado*100).toFixed(1)}% vs presupuesto (S/.{fmtMoney(desviacion)}).` });
   } else if (totalEstimado > 0 && desviacion / totalEstimado > 0.05) {
-    alerts.push({ type:'warn', msg:`🟡 Desviación moderada: ${(desviacion/totalEstimado*100).toFixed(1)}% sobre el presupuesto.` });
+    alerts.push({ type:'warn', msg:`🟡 Desviación moderada: S/.{(desviacion/totalEstimado*100).toFixed(1)}% sobre el presupuesto.` });
   } else if (totalEstimado > 0) {
     alerts.push({ type:'ok', msg:`✅ Costos dentro del estándar presupuestado.` });
   }
@@ -788,7 +788,7 @@ function renderAlerts(pendiente, desviacion, totalEstimado) {
     alerts.push({ type:'info', msg:'ℹ Comienza registrando el presupuesto y el cronograma de pagos de la obra.' });
   }
 
-  sec.innerHTML = alerts.map(a => `<div class="alert-item alert-${a.type === 'info' ? 'ok' : a.type}">${a.msg}</div>`).join('');
+  sec.innerHTML = alerts.map(a => `<div class="alert-item alert-S/.{a.type === 'info' ? 'ok' : a.type}">S/.{a.msg}</div>`).join('');
 }
 
 function renderCharts(totalEstimado, totalMateriales, totalGastos) {
@@ -844,7 +844,7 @@ function renderCharts(totalEstimado, totalMateriales, totalGastos) {
     options: {
       plugins: { legend: { display:false } },
       scales: {
-        y: { ticks: { font:{family:'IBM Plex Mono',size:9}, callback: v => '$'+fmtK(v) }, grid: { color:'#e4e7ec' } },
+        y: { ticks: { font:{family:'IBM Plex Mono',size:9}, callback: v => 'S/.'+fmtK(v) }, grid: { color:'#e4e7ec' } },
         x: { ticks: { font:{family:'IBM Plex Mono',size:9} }, grid: { display:false } }
       }
     }
@@ -856,7 +856,7 @@ function renderDashPagos() {
   const rows = [...DB.cronograma].sort((a,b) => b.fecha?.localeCompare(a.fecha)).slice(0,6);
   if (!rows.length) { tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:12px;font-size:11px">Sin pagos</td></tr>`; return; }
   tbody.innerHTML = rows.map(r=>`
-    <tr><td>${r.etapa}</td><td class="num">${fmtMoney(r.monto)}</td><td>${badgeEstado(r.estado)}</td></tr>`).join('');
+    <tr><td>S/.{r.etapa}</td><td class="num">S/.{fmtMoney(r.monto)}</td><td>S/.{badgeEstado(r.estado)}</td></tr>`).join('');
 }
 
 function renderDashDespachos() {
@@ -864,7 +864,7 @@ function renderDashDespachos() {
   const rows = [...DB.despacho].sort((a,b)=>b.fecha?.localeCompare(a.fecha)).slice(0,6);
   if (!rows.length) { tbody.innerHTML=`<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:12px;font-size:11px">Sin despachos</td></tr>`; return; }
   tbody.innerHTML = rows.map(r=>`
-    <tr><td>${r.material}</td><td class="num">${fmtNum(r.cantidad)} ${r.unidad}</td><td class="num">${fmtMoney(r.ctotal)}</td></tr>`).join('');
+    <tr><td>S/.{r.material}</td><td class="num">S/.{fmtNum(r.cantidad)} S/.{r.unidad}</td><td class="num">S/.{fmtMoney(r.ctotal)}</td></tr>`).join('');
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -888,7 +888,7 @@ function renderAll() {
 function confirmDelete(collection, id) {
   pendingDelete = { collection, id };
   document.getElementById('confirmMsg').textContent =
-    `¿Seguro que deseas eliminar este registro de "${collection}"? Esta acción no se puede deshacer.`;
+    `¿Seguro que deseas eliminar este registro de "S/.{collection}"? Esta acción no se puede deshacer.`;
   document.getElementById('confirmBtn').onclick = executeDelete;
   openModal('modal-confirm');
 }
@@ -973,7 +973,7 @@ function exportToExcel(mod) {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, sheetName);
-    XLSX.writeFile(wb, `CONSTRUCONTROL_${sheetName}_${dateFn()}.xlsx`);
+    XLSX.writeFile(wb, `CONSTRUCONTROL_S/.{sheetName}_S/.{dateFn()}.xlsx`);
     toast('success', 'EXPORTADO', 'Archivo Excel descargado');
   } catch(e) {
     toast('error', 'ERROR', 'No se pudo exportar: ' + e.message);
@@ -1012,7 +1012,7 @@ function showModule(name) {
   document.querySelectorAll('.module').forEach(m => m.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   const mod  = document.getElementById('mod-'+name);
-  const nav  = document.querySelector(`[data-module="${name}"]`);
+  const nav  = document.querySelector(`[data-module="S/.{name}"]`);
   if (mod) mod.classList.add('active');
   if (nav) nav.classList.add('active');
   const titles = {
@@ -1131,8 +1131,8 @@ function hideLoading() {
 function toast(type, title, msg) {
   const c = document.getElementById('toastContainer');
   const t = document.createElement('div');
-  t.className = `toast toast-${type}`;
-  t.innerHTML = `<div class="toast-title">${title}</div><div class="toast-msg">${msg}</div>`;
+  t.className = `toast toast-S/.{type}`;
+  t.innerHTML = `<div class="toast-title">S/.{title}</div><div class="toast-msg">S/.{msg}</div>`;
   c.appendChild(t);
   setTimeout(() => { t.style.opacity='0'; t.style.transform='translateX(20px)'; t.style.transition='0.3s'; setTimeout(()=>t.remove(),300); }, 3500);
 }
@@ -1150,8 +1150,8 @@ function toggleSidebar() {
    FORMATTING HELPERS
 ═══════════════════════════════════════════════════════ */
 function fmtMoney(n) {
-  if (isNaN(n)) return '$0.00';
-  return '$' + Number(n).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  if (isNaN(n)) return 'S/.0.00';
+  return 'S/.' + Number(n).toLocaleString('es-PE', { minimumFractionDigits:2, maximumFractionDigits:2 });
 }
 
 function fmtNum(n) {
@@ -1162,7 +1162,7 @@ function fmtNum(n) {
 function fmtDate(d) {
   if (!d) return '—';
   const [y,m,dy] = d.split('-');
-  return `${dy}/${m}/${y}`;
+  return `S/.{dy}/S/.{m}/S/.{y}`;
 }
 
 function fmtK(v) {
@@ -1173,7 +1173,7 @@ function fmtK(v) {
 
 function dateFn() {
   const d = new Date();
-  return `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  return `S/.{d.getFullYear()}S/.{String(d.getMonth()+1).padStart(2,'0')}S/.{String(d.getDate()).padStart(2,'0')}`;
 }
 
 function now() { return new Date().toISOString(); }
@@ -1185,7 +1185,7 @@ function clearForm(ids) { ids.forEach(id => { const el = document.getElementById
 
 function badgeEstado(estado) {
   const map = { PAGADO:'badge-green', PENDIENTE:'badge-red', PARCIAL:'badge-yellow' };
-  return `<span class="badge ${map[estado]||'badge-gray'}">${estado}</span>`;
+  return `<span class="badge S/.{map[estado]||'badge-gray'}">S/.{estado}</span>`;
 }
 
 function desvEstado(pct) {
@@ -1196,7 +1196,7 @@ function desvEstado(pct) {
 
 function tipoBadge(tipo) {
   const map = { SOBRECONSUMO:'badge-red', SUBCONSUMO:'badge-green', 'ESTÁNDAR':'badge-blue' };
-  return `<span class="badge ${map[tipo]||'badge-gray'}">${tipo}</span>`;
+  return `<span class="badge S/.{map[tipo]||'badge-gray'}">S/.{tipo}</span>`;
 }
 
 function eficiencia(pct) {
